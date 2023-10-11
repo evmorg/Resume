@@ -1,0 +1,123 @@
+---
+title: "Evan Morgan Resume"
+author: Evan Morgan
+date: "`r Sys.Date()`"
+output:
+  pagedown::html_resume:
+    css: ['css/custom_resume.css', 'css/styles.css', 'resume']
+    # set it to true for a self-contained HTML page but it'll take longer to render
+    self_contained: true
+knit: pagedown::chrome_print
+---
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  results='asis', 
+  echo = FALSE
+)
+library(tidyverse)
+library(glue)
+
+# Set this to true to have links turned into footnotes at the end of the document
+PDF_EXPORT <- TRUE
+
+# Holds all the links that were inserted for placement at the end
+links <- c()
+
+source('parsing_functions.R')
+
+
+# First let's get the data, filtering to only the items tagged as
+# Resume items
+position_data <- read_csv('positions_EM2.csv') %>% 
+  filter(in_resume) %>% 
+  mutate(
+    # Build some custom sections by collapsing others
+    section = case_when(
+      section %in% c('professional_positions', 'research_positions') ~ 'positions',
+      TRUE ~ section
+    )
+  ) 
+
+```
+
+
+Aside
+================================================================================
+
+
+![logo](Morgan, Evan BMI-MPH_2.PNG){width=100%}
+
+```{r, include=FALSE}
+# When in export mode the little dots are unaligned, so fix that. 
+if(PDF_EXPORT){
+  cat("View this CV online with links at _evanmorgan.me/cv_")
+} else {
+  cat("[<i class='fas fa-download'></i> Download a PDF of this CV](https://github.com/emartinmorgan/profile/emmorg_cv.pdf)")
+}
+```
+
+Contact {#contact}
+--------------------------------------------------------------------------------
+
+
+<i class="fa fa-envelope"></i> evanmorgan@duck.com</i></span></a>
+
+<a href="https://github.com/evmorg"><span class="_blank"><i class="fa fa-github"></i> github.com/evmorg</i></span></a>
+
+<a href="https://linkedin.com/in/evmorgan"><span class="_blank"><i class="fa fa-linkedin"></i> linkedin.com/in/evmorgan</i></span></a>
+
+Skills {#skills}
+--------------------------------------------------------------------------------
+Experience with Microsoft SQL Server (T-SQL, SSMS, SSIS, SSRS, SSAS), Python, R, Git, Stata, Tableau, Microsoft Access, clinical research, medical terminology, and electronic health records systems. 
+
+Citations {#citations}
+--------------------------------------------------------------------------------
+[![logo](citations_gscholar_2023.PNG)](https://scholar.google.com/citations?hl=en&user=Rm-byDcAAAAJ&view_op=list_works&sortby=pubdate){width=100%}
+
+Disclaimer {#disclaimer}
+--------------------------------------------------------------------------------
+
+Made with the R package [**pagedown**](https://github.com/rstudio/pagedown). 
+
+Last updated on `r Sys.Date()`.
+
+Main
+================================================================================
+
+Evan Morgan {#title}
+--------------------------------------------------------------------------------
+
+```{r, include=TRUE}
+intro_text <- "I have 10 years of experience in data analysis and database management, and received an MS in Biomedical Informatics from The Ohio State University College of Public Health. My graduate degree culminated in two publications, including a first-author hierarchical clustering analysis of patient portal log files to identify groups of users according to portal use. Please see my github for recently completed projects."
+
+cat(sanitize_links(intro_text))
+```
+
+
+
+Education {data-icon=graduation-cap data-concise=true}
+--------------------------------------------------------------------------------
+
+```{r}
+position_data %>% print_section('education')
+```
+
+
+
+Selected Positions {data-icon=suitcase}
+--------------------------------------------------------------------------------
+
+```{r}
+position_data %>% print_section('positions')
+```
+
+Selected Writing {data-icon=book}
+--------------------------------------------------------------------------------
+
+
+```{r}
+position_data %>% print_section('academic_articles')
+```
+
